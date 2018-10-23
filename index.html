@@ -1,149 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Star Notary</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
 
-        <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    <head>
+		<!-- Required meta tags -->
+        <meta charset="utf-8">
+        <title>Decentralized Star Notary</title>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="style.css">
     </head>
 
-    <body>
-        <div class="container">
-            <h1>Star Notary</h1>
-
-            <div class="row">
-                <label class="bold">Star Name:</label>
-                <label id="star-name"></label>
-            </div>
-
-            <div class="row">
-                <label class="bold">Star Owner:</label>
-                <label id="star-owner"></label>
-            </div>
-
-            <button id="claim-button" onclick="claimButtonClicked()">Claim Star</button>
+    <body> 
+        <div class="portfolio-container section-container">
+	        <div class="container">
+	            <div class="row">
+					<div class="">
+						<div class="form-area">  
+							<form role="form">
+								<br style="clear:both">
+								<h3 style="margin-bottom: 25px; text-align: center;">Star Notary Form</h3>
+								<div class="form-group">
+									<input type="text" class="form-control" id="star-ra" name="ra" placeholder="Ra" required>
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="star-dec" name="dec" placeholder="Dec" required>
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="star-mag" name="mag" placeholder="Mag" required>
+								</div>
+								<div class="form-group">
+								<textarea class="form-control" type="textarea" id="star-story" placeholder="Story" maxlength="250" rows="5"></textarea>
+									<span class="help-block"><p id="characterLeft" class="help-block ">You have 250 character limit</p></span>                    
+								</div>
+								<div class="loader" id="transaction-loader" style="display:none;"></div>
+								<div class="alert alert-danger" id="star-coordinators-error" role="alert" style="display:none;" >Star coordinators input empty</div>
+								<div class="alert alert-danger" id="star-register-error" role="alert" style="display:none;" >An error occurr during the register process</div>
+								<div class="alert alert-success" id="star-coordinators-success" role="alert" style="display:none;" >Star successfully registered</div>
+								<button type="button" id="claim-button" name="submit" class="btn btn-primary pull-right" onclick="claimButtonClicked()">Submit</button>
+							</form>
+						</div>
+					</div>
+	            </div>
+	        </div>
+        </div>
+                
+        <div class="blog-container section-container">
+	        <div class="container">
+	                    
+	            <div class="row">
+					<div class="">
+						<div class="form-area">  
+							<form role="form">
+								<br style="clear:both">
+								<h3 style="margin-bottom: 25px; text-align: center;">Star Search Form</h3>
+								<div class="form-group">
+									<input type="text" class="form-control" id="search-star-ra" name="ra" placeholder="Ra" required>
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="search-star-dec" name="dec" placeholder="Dec" required>
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="search-star-mag" name="mag" placeholder="Mag" required>
+								</div>
+								<div class="alert alert-danger" id="star-search-not-found" role="alert" style="display:none;" >Star not found</div>
+								<div class="alert alert-danger" id="star-search-empty-fields" role="alert" style="display:none;" >Some inputs fields are empty</div>
+								<div class="alert alert-danger" id="star-searc-error" role="alert" style="display:none;" >An error occurr during the search process</div>
+								<div class="form-group" id="search-table" style="display:none;">
+									<table class="table">
+										<thead class="thead-light">
+											<tr>
+												<th scope="col">#TokenId</th>
+												<th scope="col">Ra</th>
+												<th scope="col">Dec</th>
+												<th scope="col">Mag</th>
+												<th scope="col">Story</th>
+												<th scope="col">Owner Address</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<th scope="row" id="tokenId">1</th>
+												<td id="result-ra"></td>
+												<td id="result-dec"></td>
+												<td id="result-mag"></td>
+												<td id="result-story"></td>
+												<td id="result-owner"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<button type="button" id="search-button" name="submit" class="btn btn-primary pull-right" onclick="searchButtonClicked()">Search</button>
+							</form>
+						</div>
+					</div>
+				</div>
+	        </div>
         </div>
 
-        <script>    
-         
-            if(typeof web3 != 'undefined') { 
-                web3 = new Web3(web3.currentProvider) // what Metamask injected 
-            } else {
-                // Instantiate and set Ganache as your provider
-                web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-            }
-
-            // The default (top) wallet account from a list of test accounts 
-            web3.eth.defaultAccount = web3.eth.accounts[0];
-
-            // The interface definition for your smart contract (the ABI) 
-            var StarNotary = web3.eth.contract(
-                [
-                    {
-                        "constant": false,
-                        "inputs": [],
-                        "name": "claimStar",
-                        "outputs": [],
-                        "payable": false,
-                        "stateMutability": "nonpayable",
-                        "type": "function"
-                    },
-                    {
-                        "anonymous": false,
-                        "inputs": [
-                            {
-                                "indexed": false,
-                                "name": "owner",
-                                "type": "address"
-                            }
-                        ],
-                        "name": "starClaimed",
-                        "type": "event"
-                    },
-                    {
-                        "inputs": [],
-                        "payable": false,
-                        "stateMutability": "nonpayable",
-                        "type": "constructor"
-                    },
-                    {
-                        "constant": true,
-                        "inputs": [],
-                        "name": "starName",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "string"
-                            }
-                        ],
-                        "payable": false,
-                        "stateMutability": "view",
-                        "type": "function"
-                    },
-                    {
-                        "constant": true,
-                        "inputs": [],
-                        "name": "starOwner",
-                        "outputs": [
-                            {
-                                "name": "",
-                                "type": "address"
-                            }
-                        ],
-                        "payable": false,
-                        "stateMutability": "view",
-                        "type": "function"
-                    }
-                ]
-            );
-            // Grab the contract at specified deployed address with the interface defined by the ABI
-            var starNotary = StarNotary.at('0x8040086095e9bc41535094bf03eae1f6178b5260');
-            
-            // Get and display star name
-            starNotary.starName(function (error, result) {
-                if (!error) {
-                    document.getElementById('star-name').innerText = result
-                } else { 
-                    console.log(error);
-                }
-            });
-
-            // Get and display star owner
-            starNotary.starOwner(function (error, result) {
-                if (!error) {
-                    document.getElementById('star-owner').innerText = result
-                } else { 
-                    console.log(error);
-                }
-            });
-
-            // Enable claim button being clicked
-            function claimButtonClicked() { 
-                web3.eth.getAccounts(function(error, accounts) { 
-                    if (error) { 
-                        console.log(error)
-                        return
-                    }
-                    var account = accounts[0]
-                    starNotary.claimStar(function (error, result) {
-                        if (!error) {
-                            var starClaimedEvent = starNotary.starClaimed({from: account});
-                            starClaimedEvent.watch(function(error, result) {
-                                if (!error) {
-                                    location.reload();
-                                } else {
-                                    console.log('watching for star claimed event is failing');
-                                }
-                            });
-                        } else { 
-                            console.log(error);
-                        }
-                    });
-                   
-                })
-            }
-        </script>
+        <!-- Javascript -->
+		<script src="assets/js/webScript.js"></script>
+		<script src="assets/js/bignumber.min.js"></script>
+		<script src="assets/js/jquery-3.2.1.min.js"></script>
+        <script src="assets/js/jquery-migrate-3.0.0.min.js"></script>
+        <script src="assets/js/scripts.js"></script>
+		<script src="assets/js/web3_dist/web3.min.js"></script>
     </body>
+
 </html>

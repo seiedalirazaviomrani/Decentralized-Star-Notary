@@ -17,14 +17,6 @@ contract StarNotary is ERC721 {
     mapping(string => bool) private starIsAssigned;
     event starCreated(address owner);
 
-    function isStarExist(string _ra, string _dec, string _mag) public view returns (bool) {
-        return starIsAssigned[this.append(_ra, _dec, _mag)];
-    }
-
-    function append(string _ra, string _dec, string _mag) public pure returns (string) {
-        return string(abi.encodePacked(_ra, _dec, _mag));
-    }
-
     function createStar(string _story, string _ra, string _dec, string _mag, uint256 _tokenId) public { 
         require(!this.isStarExist(_ra, _dec, _mag));
         Star memory newStar = Star(_story, _ra, _dec, _mag, true);
@@ -32,6 +24,14 @@ contract StarNotary is ERC721 {
         starIsAssigned[this.append(_ra, _dec, _mag)] = true;
         _mint(msg.sender, _tokenId);
         emit starCreated(msg.sender);
+    }
+
+    function isStarExist(string _ra, string _dec, string _mag) public view returns (bool) {
+        return starIsAssigned[this.append(_ra, _dec, _mag)];
+    }
+
+    function append(string _ra, string _dec, string _mag) public pure returns (string) {
+        return string(abi.encodePacked(_ra, _dec, _mag));
     }
 
     function putStarUpForSale(uint256 _tokenId, uint256 _price) public { 

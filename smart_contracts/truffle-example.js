@@ -13,7 +13,7 @@
  */
 const HDWalletProvider = require("truffle-hdwallet-provider");
 
-const MNEMONIC = "ride course head motor forget like peace genuine foster royal dose utility";
+const MNEMONIC = "PASTE YOUR MNEMONIC HERE!";
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -26,7 +26,7 @@ module.exports = {
     },
     rinkeby: {
         provider: function() {
-            return new HDWalletProvider(MNEMONIC, 'https://rinkeby.infura.io/v3/56c5de7cdaee4ba5945058609b618ab5')
+            return new HDWalletProvider(MNEMONIC, 'PASTE YOU INFURA WEB URL HERE!')
         },
         network_id: 4,
         gas: 4500000,

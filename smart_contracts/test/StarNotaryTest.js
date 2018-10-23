@@ -42,9 +42,8 @@ contract('StarNotary', accounts => {
     });
 
     describe('Check if star exist in Smart Contract', () => {
-
         beforeEach(async () => { 
-            await this.contract.createStar(starData1.ra, starData1.dec, starData1.mag, starData1.story, hashStarTokenId1, {from: user1});    
+            await this.contract.createStar(starData1.story, starData1.ra, starData1.dec, starData1.mag, hashStarTokenId1, {from: user1});    
         });
         
         it('Check if star is already assigned', async () => {
