@@ -94,6 +94,28 @@ To check my result please see the below screen shot files and check the transact
 
 <img src="https://github.com/seiedalirazaviomrani/Decentralized-Star-Notary/blob/master/img/img5.png?raw=true">
 
+## Contract
+- Transaction Hash
+```
+0x354b0aa36d8acff0fbcb48a5ad6d6bd4b951ec3a200c0b8cc8556ca351e44e10
+```
+- Contract Address
+```
+0xf2040E4250116AA939513ff213056477b46305A8
+```
+
+## Create Star
+- Transaction hash
+```
+0xb807e852e24b7fb5c50bd9cf7796edc0e604f5f9ab3524f9e95a645aec734eb0
+```
+
+## Put the star to buy
+- Transaction hash
+```
+0x9e6428ad36396522d53287b079c59b6abc748f91453424692af8afde45f8d6db
+```
+
 ## Modify client code to interact with smart contract
 
 In this section you could interact with the previous deployed StarNotary smart contract in public Rinkeby test network using a web application.
