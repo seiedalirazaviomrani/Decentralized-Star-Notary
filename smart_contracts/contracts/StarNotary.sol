@@ -17,7 +17,7 @@ contract StarNotary is ERC721 {
     mapping(string => bool) private starIsAssigned;
     event starCreated(address owner);
 
-    function createStar(string _story, string _ra, string _dec, string _mag, uint256 _tokenId) public { 
+    function createStar(string _story, string _ra, string _dec, string _mag, uint256 _tokenId) public {    
         require(!this.isStarExist(_ra, _dec, _mag));
         Star memory newStar = Star(_story, _ra, _dec, _mag, true);
         tokenIdToStarInfo[_tokenId] = newStar;
@@ -50,5 +50,10 @@ contract StarNotary is ERC721 {
         if(msg.value > starCost) { 
             msg.sender.transfer(msg.value - starCost);
         }
+    }
+
+    function tokenIdToStarInfo(uint256 tokenId) public view returns(string, string, string, string) {
+        return (tokenIdToStarInfo[tokenId].story, tokenIdToStarInfo[tokenId].ra,
+            tokenIdToStarInfo[tokenId].dec, tokenIdToStarInfo[tokenId].mag);
     }
 }

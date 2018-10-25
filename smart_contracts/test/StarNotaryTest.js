@@ -38,7 +38,6 @@ contract('StarNotary', accounts => {
             assert.equal(result[2], starData2.mag);
             assert.equal(result[3], starData2.story);
         });
-
     });
 
     describe('Check if star exist in Smart Contract', () => {
